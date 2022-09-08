@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_08_070844) do
+ActiveRecord::Schema.define(version: 2022_09_08_073946) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,6 +26,16 @@ ActiveRecord::Schema.define(version: 2022_09_08_070844) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["driver_id"], name: "index_driver_services_on_driver_id"
     t.index ["vehicle_id"], name: "index_driver_services_on_vehicle_id"
+  end
+
+  create_table "service_tickets", force: :cascade do |t|
+    t.bigint "driver_service_id"
+    t.bigint "passenger_id"
+    t.boolean "request_status", default: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["driver_service_id"], name: "index_service_tickets_on_driver_service_id"
+    t.index ["passenger_id"], name: "index_service_tickets_on_passenger_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -63,5 +73,7 @@ ActiveRecord::Schema.define(version: 2022_09_08_070844) do
 
   add_foreign_key "driver_services", "users", column: "driver_id"
   add_foreign_key "driver_services", "vehicles"
+  add_foreign_key "service_tickets", "driver_services"
+  add_foreign_key "service_tickets", "users", column: "passenger_id"
   add_foreign_key "vehicles", "users"
 end
